@@ -30,14 +30,47 @@ server.get('/api/cohorts', async (req, res) => {
 // GET /api/cohorts/:id
 server.get('/api/cohorts/:id', async (req, res) => {
   try {
-    const role = await db('cohorts')
+    const cohort = await db('cohorts')
       .where({ id: req.params.id })
       .first();
-    res.status(200).json(role);
+    res.status(200).json(cohort);
   } catch (error) {
     res.status(500).json(error);
   }
 });
+
+// POST /api/cohorts
+server.post('/api/cohorts', async (req, res) => {
+    try {
+      const cohort = await db('cohorts').insert(req.body);
+      res.status(201).json(cohort)
+    } catch (error) {
+      res.status(500).json({error: 'Failed to add a new cohort to the database :('})
+    }
+  }
+);
+  
+  // PUT /api/cohorts/:id
+  server.put('/api/cohorts/:id', async (req, res) => {
+    try {
+      const cohort = await db('cohorts').where({ id: req.params.id }).update(req.body);
+      res.status(200).json(cohort);
+    } catch (error) {
+      res.status(500).json({error: 'Failed to update the cohort informations.'})
+    }
+  }
+);
+  
+  // DELETE /api/cohorts/:id
+  server.delete('/api/cohorts/:id', async (req, res) => {
+    try {
+      const cohort = await db('cohorts').where({ id: req.params.id }).delete();
+      res.status(202).json({message: 'The cohort has been succefully deleted'})
+    } catch (error) {
+      res.status(500).json({error: 'Failed to delete the specified cohort'})
+    }
+  }
+);
 
 const port = process.env.PORT || 5000;
 server.listen(port, () => console.log(`\nServer is running on PORT ${port}\n`));
