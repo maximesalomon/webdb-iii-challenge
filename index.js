@@ -42,8 +42,9 @@ server.get('/api/cohorts/:id', async (req, res) => {
 // POST /api/cohorts
 server.post('/api/cohorts', async (req, res) => {
     try {
-      const cohort = await db('cohorts').insert(req.body);
-      res.status(201).json(cohort)
+      const cohort = await db('cohorts')
+        .insert(req.body);
+      res.status(201).json({message: "Your cohort has been successfully added!"})
     } catch (error) {
       res.status(500).json({error: 'Failed to add a new cohort to the database :('})
     }
@@ -53,8 +54,11 @@ server.post('/api/cohorts', async (req, res) => {
   // PUT /api/cohorts/:id
   server.put('/api/cohorts/:id', async (req, res) => {
     try {
-      const cohort = await db('cohorts').where({ id: req.params.id }).update(req.body);
-      res.status(200).json(cohort);
+      const cohort = await db('cohorts')
+        .where({ id: req.params.id })
+        .update(req.body)
+        .first()
+      res.status(200).json({message: "Your cohort has been successfully updated!"});
     } catch (error) {
       res.status(500).json({error: 'Failed to update the cohort informations.'})
     }
@@ -64,8 +68,10 @@ server.post('/api/cohorts', async (req, res) => {
   // DELETE /api/cohorts/:id
   server.delete('/api/cohorts/:id', async (req, res) => {
     try {
-      const cohort = await db('cohorts').where({ id: req.params.id }).delete();
-      res.status(202).json({message: 'The cohort has been succefully deleted'})
+      const cohort = await db('cohorts')
+        .where({ id: req.params.id })
+        .delete();
+      res.status(202).json({message: 'The cohort has been successfully deleted'})
     } catch (error) {
       res.status(500).json({error: 'Failed to delete the specified cohort'})
     }
