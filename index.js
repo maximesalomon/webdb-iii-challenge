@@ -27,5 +27,17 @@ server.get('/api/cohorts', async (req, res) => {
   }
 });
 
+// GET /api/cohorts/:id
+server.get('/api/cohorts/:id', async (req, res) => {
+  try {
+    const role = await db('cohorts')
+      .where({ id: req.params.id })
+      .first();
+    res.status(200).json(role);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 const port = process.env.PORT || 5000;
 server.listen(port, () => console.log(`\nServer is running on PORT ${port}\n`));
